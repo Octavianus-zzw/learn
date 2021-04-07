@@ -8,7 +8,6 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 class ShareDataLock {
-    public volatile boolean flag = true;
     public static AtomicInteger atomicInteger = new AtomicInteger();
     public static final int MAX_COUNT = 10;
     public static final List<Integer> pool = new ArrayList<>();
@@ -16,7 +15,7 @@ class ShareDataLock {
     private Lock lock = new ReentrantLock();
     private Condition condition = lock.newCondition();
 
-    public void producer() {
+    public void produce() {
         OUT:
         while (true) {
             if (Thread.currentThread().isInterrupted()) {
@@ -48,7 +47,7 @@ class ShareDataLock {
     }
 
 
-    public void consumer() {
+    public void consume() {
         OUT:
         while (true) {
             if (Thread.currentThread().isInterrupted()) {
@@ -86,19 +85,19 @@ public class ProducerConsumerLock {
     public static void main(String[] args) {
         ShareDataLock shareData = new ShareDataLock();
         Thread tA = new Thread(() -> {
-            shareData.producer();
+            shareData.produce();
         }, "Thread-A");
 
         Thread tB = new Thread(() -> {
-            shareData.producer();
+            shareData.produce();
         }, "Thread-B");
 
         Thread tC = new Thread(() -> {
-            shareData.producer();
+            shareData.produce();
         }, "Thread-C");
 
         Thread tD = new Thread(() -> {
-            shareData.consumer();
+            shareData.consume();
         }, "Thread-D");
 
         tA.start();
